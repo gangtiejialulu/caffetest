@@ -44,30 +44,31 @@ def	Test(img):
     softmax = net.blobs['softmax'].data[0] #.flatten() #取出最后一层（prob）属于某个类别的概率值，并打印,'prob'为最后一层的名称
 
     #print(softmax)
-    print("softmax.shape:"softmax.shape)
+    print(softmax.shape)
 
-    score_map = np.amax(softmax,axis=0)
-    order_map = np.argmax(softmax,axis=0)
+    prob_map = np.amax(softmax,axis=0)       #nclass层中最大值（概率）
+    order_map = np.argmax(softmax,axis=0)    #nclass层中最大值所在的序号
 
-    print("score_map.shape:"score_map.shape)
-    print("order_map.shape:"order_map.shape)
-    print(score_map)
+    print(prob_map.shape)
+    print(order_map.shape)
+    print(prob_map)
     print(order_map)
 
     # set thresold
-    order_map[score_map<0.99]=-1
+    order_map[prob_map<0.95]=-1          #最大概率小于0.99的位置的序号变为-1
     print order_map
 
-    d = Counter(order_map.flatten().tolist())
-    d = sorted(d.items(),key=lambda item:item[1],reverse=True)
+    key_value = Counter(order_map.flatten().tolist())      #返回键值对：order_map中 相同元素:出现次数
+    key_value = sorted(key_value.iteritems(),key=lambda item:item[1],reverse=True)   #键值对按值降序
 
     # 38 x 26
     heatmap= np.zeros((38,26))
-    for k in d:
-        if k[0]!=-1:
-            print('%s --> %d' % (k[0],k[1]))
-            point = labels[k[0]].split('x')
-            heatmap[int(point[0])-1][int(point[1])-1]=k[1]
+    for k,v in key_value:
+        if k!=-1:
+            k_label = labels[k]
+            print('%s --> %d' % (k_label,v))
+            point = k_label.split('x')      #序号转换为label
+            heatmap[int(point[0])-1][int(point[1])-1]=v
     print(heatmap)
     np.savetxt('result.txt',heatmap,fmt='%d')
 
