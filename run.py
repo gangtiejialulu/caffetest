@@ -1,10 +1,10 @@
 #coding=utf-8
-import	os
-import	sys
+import os
+import sys
 sys.path.append('/new/xjl/caffe/python')
-import	caffe
-import	numpy	as	np
-from	collections	import	Counter
+import caffe
+import numpy as np
+from collections import	Counter
 
 deploy	=	'deploy.prototxt'	#	deploy文件
 caffe_model	=	'/new/xjl/DIGITS-6/digits/jobs/20171021-154458-597e/snapshot_iter_62220.caffemodel'	#	训练好的	caffemodel
